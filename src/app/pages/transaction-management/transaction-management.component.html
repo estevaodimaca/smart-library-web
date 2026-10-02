@@ -1,0 +1,71 @@
+<div class="mb-8 flex justify-between items-center">
+  <div>
+    <h1 class="text-3xl font-bold text-slate-900 dark:text-white tracking-tight font-outfit">Gestão de Transacções</h1>
+    <p class="text-slate-500 mt-1 text-sm">Gerencie as transacções/menus do sistema.</p>
+  </div>
+  <button *ngIf="!showForm" (click)="openNewForm()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium transition-colors">
+    + Nova Transacção
+  </button>
+</div>
+
+<!-- Form -->
+<div *ngIf="showForm" class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm p-6 mb-8">
+  <h3 class="text-lg font-medium text-slate-900 dark:text-white mb-4">{{ editingId ? 'Editar Transacção' : 'Nova Transacção' }}</h3>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div>
+      <label class="block text-xs font-medium text-slate-500 mb-1 uppercase">Nome (Label)</label>
+      <input type="text" [(ngModel)]="formData.name" class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500">
+    </div>
+    <div>
+      <label class="block text-xs font-medium text-slate-500 mb-1 uppercase">Rota (/caminho)</label>
+      <input type="text" [(ngModel)]="formData.route" class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500">
+    </div>
+    <div>
+      <label class="block text-xs font-medium text-slate-500 mb-1 uppercase">Ícone (Google Material)</label>
+      <input type="text" [(ngModel)]="formData.icon" class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500">
+    </div>
+  </div>
+  <div class="mt-6 flex gap-3">
+    <button (click)="saveTransaction()" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-medium transition-colors">Guardar</button>
+    <button (click)="cancelForm()" class="px-5 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-lg text-sm font-medium transition-colors">Cancelar</button>
+  </div>
+</div>
+
+<!-- List -->
+<div *ngIf="!showForm" class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm overflow-hidden">
+  <table class="min-w-full divide-y divide-slate-200 dark:divide-slate-700">
+    <thead class="bg-slate-50 dark:bg-slate-800">
+      <tr>
+        <th class="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase">Nome</th>
+        <th class="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase">Rota</th>
+        <th class="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase">Ícone</th>
+        <th class="px-6 py-4 text-right text-xs font-semibold text-slate-500 uppercase">Acções</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-slate-200 dark:divide-slate-700">
+      <tr *ngFor="let t of transactions">
+        <td class="px-6 py-4 text-sm text-slate-900 dark:text-white font-medium">{{ t.name }}</td>
+        <td class="px-6 py-4 text-sm text-slate-500">{{ t.route }}</td>
+        <td class="px-6 py-4 text-sm text-slate-500">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-[20px]">{{ t.icon }}</span> {{ t.icon }}
+          </div>
+        </td>
+        <td class="px-6 py-4 text-sm text-right flex justify-end gap-2">
+          <button (click)="viewDetails(t)" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded text-xs font-medium transition-colors" title="Ver Detalhes">
+            <span class="material-symbols-outlined text-[18px]">visibility</span>
+          </button>
+          <button (click)="editTransaction(t)" class="px-2 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded text-xs font-medium transition-colors" title="Editar">
+            <span class="material-symbols-outlined text-[18px]">edit</span>
+          </button>
+          <button (click)="deleteTransaction(t.id)" class="px-2 py-1 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded text-xs font-medium transition-colors" title="Remover">
+            <span class="material-symbols-outlined text-[18px]">delete</span>
+          </button>
+        </td>
+      </tr>
+      <tr *ngIf="transactions.length === 0 && !isLoading">
+        <td colspan="4" class="px-6 py-8 text-center text-slate-500">Nenhuma transacção encontrada.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

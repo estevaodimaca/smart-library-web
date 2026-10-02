@@ -1,0 +1,4 @@
+/* Estilos específicos do Sidebar (A maioria é utilitário do Tailwind) */
+nav {
+    box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+}

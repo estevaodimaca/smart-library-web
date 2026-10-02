@@ -1,0 +1,75 @@
+<nav class="flex flex-col w-72 h-screen bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 shrink-0 transition-colors duration-300">
+  <!-- Logo -->
+  <div class="h-20 flex items-center px-8 border-b border-slate-200 dark:border-slate-800 transition-colors duration-300">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-fuchsia-500 flex items-center justify-center">
+        <span class="material-symbols-outlined text-white text-[18px]">auto_stories</span>
+      </div>
+      <span class="text-xl font-bold text-slate-900 dark:text-white tracking-wide font-outfit">Smart<span class="text-indigo-600 dark:text-indigo-400">Lib</span></span>
+    </div>
+  </div>
+
+  <!-- Menu Pessoal / Rápido -->
+  <div class="p-6">
+    <div class="flex items-center gap-4 mb-8">
+      <div class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center border border-slate-200 dark:border-slate-600 transition-colors duration-300">
+        <span class="material-symbols-outlined text-slate-500 dark:text-slate-300">person</span>
+      </div>
+      <div>
+        <div class="text-sm font-semibold text-slate-900 dark:text-white">{{ 'sidebar.admin' | translate }}</div>
+        <div class="text-xs text-slate-500">{{ 'sidebar.superuser' | translate }}</div>
+      </div>
+    </div>
+
+    <!-- Menus Dinâmicos -->
+    <ul class="flex flex-col space-y-6">
+      <ng-container *ngFor="let menu of userMenus">
+        
+        <!-- Transação Pai -->
+        <li *ngIf="menu.subTransactions?.length" class="flex flex-col">
+          <span class="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-3">{{ menu.name | translate }}</span>
+          <ul class="space-y-1">
+            <li *ngFor="let submenu of menu.subTransactions">
+              <a [routerLink]="submenu.route" 
+                 routerLinkActive="active" 
+                 #rlaSub="routerLinkActive"
+                 [routerLinkActiveOptions]="{exact: true}"
+                 [ngClass]="rlaSub.isActive ? 'text-white bg-indigo-600 shadow-[0_0_10px_rgba(79,70,229,0.2)] dark:shadow-[0_0_10px_rgba(79,70,229,0.3)]' : 'text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-white hover:bg-indigo-50 dark:hover:bg-slate-800/50'"
+                 class="flex items-center px-3 py-2.5 rounded-xl text-sm font-medium transition-all group">
+                <span class="material-symbols-outlined text-[20px] mr-3 transition-colors"
+                      [ngClass]="rlaSub.isActive ? '' : 'text-slate-400 dark:text-slate-500 group-hover:text-indigo-600 dark:group-hover:text-indigo-400'">
+                  {{ submenu.icon }}
+                </span>
+                {{ submenu.name | translate }}
+              </a>
+            </li>
+          </ul>
+        </li>
+        
+        <!-- Transação sem filho (ex: Dashboard) -->
+        <li *ngIf="!menu.subTransactions?.length">
+           <span class="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-3 block">{{ 'general' | translate }}</span>
+          <a [routerLink]="menu.route" 
+             routerLinkActive="active" 
+             #rla="routerLinkActive"
+             [routerLinkActiveOptions]="{exact: true}"
+             [ngClass]="rla.isActive ? 'text-white bg-indigo-600 shadow-[0_0_10px_rgba(79,70,229,0.2)] dark:shadow-[0_0_10px_rgba(79,70,229,0.3)]' : 'text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-white hover:bg-indigo-50 dark:hover:bg-slate-800/50'"
+             class="flex items-center px-3 py-2.5 rounded-xl text-sm font-medium transition-all group">
+            <span class="material-symbols-outlined text-[20px] mr-3 transition-colors"
+                  [ngClass]="rla.isActive ? '' : 'text-slate-400 dark:text-slate-500 group-hover:text-indigo-600 dark:group-hover:text-indigo-400'">
+              {{ menu.icon }}
+            </span>
+            {{ menu.name | translate }}
+          </a>
+        </li>
+      </ng-container>
+    </ul>
+  </div>
+  
+  <div class="mt-auto p-6 border-t border-slate-200 dark:border-slate-800 transition-colors duration-300">
+    <button (click)="logout()" class="flex items-center w-full px-3 py-2.5 text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-400/10 rounded-xl transition-all">
+      <span class="material-symbols-outlined text-[20px] mr-3">logout</span>
+      {{ 'sidebar.logout' | translate }}
+    </button>
+  </div>
+</nav>

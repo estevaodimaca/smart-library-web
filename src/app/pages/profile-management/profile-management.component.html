@@ -1,0 +1,70 @@
+<div class="mb-8 flex justify-between items-center">
+  <div>
+    <h1 class="text-3xl font-bold text-slate-900 dark:text-white tracking-tight font-outfit">Gestão de Perfis</h1>
+    <p class="text-slate-500 mt-1 text-sm">Gerencie os perfis de acesso.</p>
+  </div>
+  <button *ngIf="!showForm" (click)="openNewForm()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium transition-colors">
+    + Novo Perfil
+  </button>
+</div>
+
+<!-- Form -->
+<div *ngIf="showForm" class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm p-6 mb-8">
+  <h3 class="text-lg font-medium text-slate-900 dark:text-white mb-4">{{ editingId ? 'Editar Perfil' : 'Novo Perfil' }}</h3>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+      <label class="block text-xs font-medium text-slate-500 mb-1 uppercase">Nome do Perfil</label>
+      <input type="text" [(ngModel)]="formData.name" class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500" placeholder="ex: ADMIN, USER">
+    </div>
+  </div>
+
+  <div class="mt-6">
+    <label class="block text-xs font-medium text-slate-500 mb-2 uppercase">Transacções (Menus) Permitidos</label>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div *ngFor="let t of availableTransactions" class="flex items-center">
+        <input type="checkbox" [checked]="hasTransaction(t.id)" (change)="toggleTransaction(t)" class="w-4 h-4 text-indigo-600 bg-slate-100 border-slate-300 rounded focus:ring-indigo-500">
+        <label class="ml-2 text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center gap-1">
+          <span class="material-symbols-outlined text-[16px] text-slate-400">{{ t.icon }}</span> {{ t.name }}
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-6 flex gap-3">
+    <button (click)="saveProfile()" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-medium transition-colors">Guardar</button>
+    <button (click)="cancelForm()" class="px-5 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-lg text-sm font-medium transition-colors">Cancelar</button>
+  </div>
+</div>
+
+<!-- List -->
+<div *ngIf="!showForm" class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm overflow-hidden">
+  <table class="min-w-full divide-y divide-slate-200 dark:divide-slate-700">
+    <thead class="bg-slate-50 dark:bg-slate-800">
+      <tr>
+        <th class="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase">ID</th>
+        <th class="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase">Nome</th>
+        <th class="px-6 py-4 text-right text-xs font-semibold text-slate-500 uppercase">Acções</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-slate-200 dark:divide-slate-700">
+      <tr *ngFor="let p of profiles">
+        <td class="px-6 py-4 text-sm text-slate-500 dark:text-slate-400">{{ p.id }}</td>
+        <td class="px-6 py-4 text-sm text-slate-900 dark:text-white font-medium">{{ p.name }}</td>
+        <td class="px-6 py-4 text-sm text-right flex justify-end gap-2">
+          <button (click)="viewDetails(p)" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded text-xs font-medium transition-colors" title="Ver Detalhes">
+            <span class="material-symbols-outlined text-[18px]">visibility</span>
+          </button>
+          <button (click)="editProfile(p)" class="px-2 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded text-xs font-medium transition-colors" title="Editar">
+            <span class="material-symbols-outlined text-[18px]">edit</span>
+          </button>
+          <button (click)="deleteProfile(p.id)" class="px-2 py-1 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded text-xs font-medium transition-colors" title="Remover">
+            <span class="material-symbols-outlined text-[18px]">delete</span>
+          </button>
+        </td>
+      </tr>
+      <tr *ngIf="profiles.length === 0 && !isLoading">
+        <td colspan="3" class="px-6 py-8 text-center text-slate-500">Nenhum perfil encontrado.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
