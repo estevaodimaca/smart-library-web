@@ -3,6 +3,7 @@ import { Router, RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -25,7 +26,7 @@ export class LoginComponent {
     this.isLoading = true;
     this.errorMsg = '';
 
-    this.http.get<any[]>('http://localhost:8080/api/users').subscribe({
+    this.http.get<any[]>(`${environment.apiUrl}/users`).subscribe({
       next: (users) => {
         const foundUser = users.find(u => u.email === this.loginValue || u.taxId === this.loginValue || u.id === this.loginValue);
         
